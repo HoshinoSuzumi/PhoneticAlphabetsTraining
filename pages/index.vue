@@ -5,7 +5,7 @@ import type {PhoneticDictionary} from "~/components/AlphabetCard";
 const alphabets = reactive<PhoneticDictionary>({
   'A': [{word: 'alpha', ipa: '/ˈælfə/'}],
   'B': [{word: 'bravo', ipa: '/ˈbrɑːvoʊ/'}],
-  'C': [{word: 'charlie', ipa: '/ˈtʃɑːrli/'}],
+  'C': [{word: 'charlie', ipa: '/ˈtʃɑːrli/'}, {word: 'comic', ipa: '/ˈkɒmɪk/'}],
   'D': [{word: 'delta', ipa: '/ˈdeltə/'}],
   'E': [{word: 'echo', ipa: '/ˈekoʊ/'}],
   'F': [{word: 'foxtrot', ipa: '/ˈfɑːkstrɑːt/'}, {word: 'florida', ipa: '/ˈflɔrədə/'}],

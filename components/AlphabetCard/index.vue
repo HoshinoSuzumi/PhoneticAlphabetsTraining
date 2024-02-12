@@ -16,6 +16,7 @@ const props = defineProps({
 })
 
 const showIndex = ref(0)
+const speaking = ref(false)
 
 const fuck_swap = () => {
   if (showIndex.value + 1 >= props.phonetics.length) {
@@ -26,8 +27,11 @@ const fuck_swap = () => {
 }
 
 const fuck_tts = (word: string) => {
-  const ret = tts(word)
+  const ret = tts(word, 1.5, 1.0, () => {
+    speaking.value = false
+  })
   if (ret === -2) message.info('请等待上则播完')
+  if (ret === 0) speaking.value = true
 }
 </script>
 
@@ -36,26 +40,35 @@ const fuck_tts = (word: string) => {
     <div class="flex flex-row relative overflow-hidden justify-between rounded-lg bg-base-100 border shadow-sm">
       <Transition name="phonetic" mode="out-in">
         <div class="flex flex-col pl-2 py-2 pt-1" :key="showIndex">
-          <h1 class="cursor-pointer hover:drop-shadow group" @click="fuck_tts(phonetics[showIndex].word)">
-            <span class="text-2xl text-accent font-bold">{{ phonetics[showIndex].word.charAt(0).toUpperCase() }}</span>
-            <span class="text-lg text-accent-content font-normal group-hover:text-accent">
+          <h1 class="cursor-pointer hover:drop-shadow group flex flex-row items-end"
+              @click="fuck_tts(phonetics[showIndex].word)">
+            <span class="text-2xl text-accent font-bold">
+              {{ phonetics[showIndex].word.charAt(0).toUpperCase() }}
+            </span>
+            <span class="text-lg text-accent-content font-normal"
+                  :class="{'!text-accent': speaking}">
               {{ phonetics[showIndex].word.slice(1) }}
             </span>
+            <Transition name="fadeIn" mode="out-in">
+              <IconVolume v-if="speaking" class="inline-block self-center text-lg text-accent ml-0.5 transition"/>
+            </Transition>
           </h1>
           <span class="text-xs text-neutral-400 font-ipa font-bold">{{ phonetics[showIndex].ipa }}</span>
         </div>
       </Transition>
       <div class="relative" v-if="phonetics.length > 1">
         <div class="absolute inset-0 -left-2 flex flex-col justify-center space-y-1 pointer-events-none">
-          <div v-for="(phonetic, k) in phonetics" :key="k"
-               class="w-1 h-1 rounded-full bg-neutral-content transition"
-               :class="{'!bg-accent': k === showIndex}"></div>
+          <button v-for="(phonetic, k) in phonetics" :key="k"
+                  class="w-1 h-1 rounded-full bg-neutral-content transition pointer-events-auto"
+                  :class="{'!bg-accent': k === showIndex}" @click="showIndex = k"></button>
         </div>
         <button class="h-full bg-neutral-content p-1 cursor-pointer" @click="fuck_swap">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                  d="M11 8L7 4m0 0L3 8m4-4v16m6-4l4 4m0 0l4-4m-4 4V4"/>
-          </svg>
+          <Transition name="phonetic" mode="out-in">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" :key="showIndex">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M11 8L7 4m0 0L3 8m4-4v16m6-4l4 4m0 0l4-4m-4 4V4"/>
+            </svg>
+          </Transition>
         </button>
       </div>
     </div>
@@ -74,5 +87,15 @@ const fuck_tts = (word: string) => {
 
 .phonetic-leave-to {
   @apply opacity-0 -translate-y-4;
+}
+
+.fadeIn-enter-active,
+.fadeIn-leave-active {
+  @apply transition duration-300;
+}
+
+.fadeIn-enter-from,
+.fadeIn-leave-to {
+  @apply opacity-0;
 }
 </style>
