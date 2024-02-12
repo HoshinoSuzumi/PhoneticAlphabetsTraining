@@ -14,8 +14,6 @@ const persist = usePersistence()
 const tts = useSpeech()
 
 const input_answer = ref('')
-// const correct_answer = ref(true)
-// const wrong_answer = ref(false)
 const answer_state = ref<-1 | 0 | 1>(0)
 
 const stats = ref({
@@ -68,19 +66,6 @@ const fuck_submit = () => {
 onMounted(() => {
   fuck_new_challenge()
 })
-
-// const handle_input = (e: any) => {
-//   console.log(e)
-//   const nextElement = e.target.nextElementSibling
-//   const prevElement = e.target.previousElementSibling
-//
-//   if (e.inputType === 'deleteContentBackward') {
-//     if (prevElement) prevElement.focus()
-//   } else if (e.inputType === 'insertText') {
-//     if (nextElement) nextElement.focus()
-//     else e.target.blur()
-//   }
-// }
 </script>
 
 <template>
@@ -116,7 +101,6 @@ onMounted(() => {
           <h1 class="text-4xl font-black font-mono">
             {{ challenge.answer || '------' }}
           </h1>
-          <!--          <p class="text-xs">{{ challenge.speech }}</p>-->
         </div>
         <button class="btn btn-square btn-lg btn-primary" @click="fuck_speech">
           <IconVolume class="w-8 h-8"/>

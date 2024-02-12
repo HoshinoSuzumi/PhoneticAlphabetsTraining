@@ -34,5 +34,4 @@ export const useRandomCallsign = (template: string) => {
         }
         return generated_part
     })
-    // return generateCallSign(Object.values(callsignTemplates)[Math.floor(Math.random() * Object.keys(callsignTemplates).length)])
 }
