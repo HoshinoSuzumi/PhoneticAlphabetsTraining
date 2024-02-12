@@ -41,7 +41,7 @@ const nav = ref([
               </svg>
             </label>
           </div>
-          <div>
+          <div class="cursor-pointer select-none">
             <h1 class="text-lg font-bold flex items-center">
               字母解释法练习器
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

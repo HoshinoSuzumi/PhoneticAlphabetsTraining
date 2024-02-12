@@ -4,6 +4,10 @@ import type {PropType} from "vue";
 import {useSpeech} from "~/composables/useSpeech";
 import {useMessage} from "~/composables/uni/useMessage";
 
+useHead({
+  title: '字母解释法速查表 · HAM c5r'
+})
+
 const tts = useSpeech()
 const message = useMessage()
 
@@ -30,7 +34,7 @@ const fuck_tts = (word: string) => {
   const ret = tts(word, 1.0, 1.0, () => {
     speaking.value = false
   })
-  if (ret === -2) message.info('请等待上则播完')
+  if (ret === -2) message.info('请等待当前播放完毕')
   if (ret === 0) speaking.value = true
 }
 </script>

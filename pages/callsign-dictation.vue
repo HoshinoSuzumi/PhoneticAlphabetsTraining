@@ -5,6 +5,10 @@ import {usePersistence} from "~/composables/usePersistence";
 import {useSpeech} from "~/composables/useSpeech";
 import {useMessage} from "~/composables/uni/useMessage";
 
+useHead({
+  title: '模拟呼号抄听 · HAM c5r'
+})
+
 const message = useMessage()
 const persist = usePersistence()
 const tts = useSpeech()
