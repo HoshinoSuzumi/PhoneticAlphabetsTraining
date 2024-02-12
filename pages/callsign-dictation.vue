@@ -13,6 +13,7 @@ const message = useMessage()
 const persist = usePersistence()
 const tts = useSpeech()
 
+const answer_field = ref()
 const input_answer = ref('')
 const answer_state = ref<-1 | 0 | 1>(0)
 
@@ -47,6 +48,7 @@ const fuck_new_challenge = () => {
 
 const fuck_speech = (slow: boolean = false) => {
   tts(challenge.value.speech, slow ? 0.8 : 1.0)
+  answer_field.value.focus()
 }
 
 const fuck_submit = () => {
@@ -112,7 +114,8 @@ onMounted(() => {
     </div>
     <div class="flex flex-col w-full md:w-[640px] p-8 bg-base-100 border shadow rounded-lg space-y-2">
       <div class="join mb-2">
-        <input type="text" autocomplete="none" placeholder="输入你听到的呼号"
+        <input type="text" autocomplete="none" placeholder="输入你听到的呼号" ref="answer_field"
+               @keydown.enter="(!input_answer || answer_state === 1) ? void 0 : answer_state === -1 ? fuck_new_challenge() : fuck_submit()"
                :class="{'text-red-500': answer_state === -1, 'text-green-500': answer_state === 1}"
                class="join-item input input-lg input-bordered text-center w-full uppercase font-bold text-2xl"
                maxlength="8" v-model="input_answer"/>
