@@ -6,7 +6,8 @@ const fuck_tts: fuck_tts = (
     content: string,
     rate: number = 1.0,
     pitch: number = 1.0,
-    onend: ((this: SpeechSynthesisUtterance, ev: SpeechSynthesisEvent) => any) | null = null
+    onend: ((this: SpeechSynthesisUtterance, ev: SpeechSynthesisEvent) => any) | null = null,
+    lang: string = 'en-US'
 ): number => {
   if (!content) return -1
   if (!synth.value) return -1
@@ -15,6 +16,7 @@ const fuck_tts: fuck_tts = (
   const utterance = new SpeechSynthesisUtterance(content)
   utterance.pitch = pitch
   utterance.rate = rate
+  utterance.lang = lang
 
   if (onend) utterance.onend = onend
 
