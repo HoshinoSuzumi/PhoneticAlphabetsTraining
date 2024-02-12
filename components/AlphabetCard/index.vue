@@ -27,7 +27,7 @@ const fuck_swap = () => {
 }
 
 const fuck_tts = (word: string) => {
-  const ret = tts(word, 1.5, 1.0, () => {
+  const ret = tts(word, 1.0, 1.0, () => {
     speaking.value = false
   })
   if (ret === -2) message.info('请等待上则播完')
@@ -37,7 +37,8 @@ const fuck_tts = (word: string) => {
 
 <template>
   <div>
-    <div class="flex flex-row relative overflow-hidden justify-between rounded-lg bg-base-100 border shadow-sm">
+    <div
+        class="flex flex-row relative overflow-hidden justify-between rounded-lg bg-base-100 border shadow-sm border-neutral-content border-b-4">
       <Transition name="phonetic" mode="out-in">
         <div class="flex flex-col pl-2 py-2 pt-1" :key="showIndex">
           <h1 class="cursor-pointer hover:drop-shadow group flex flex-row items-end"
@@ -62,8 +63,8 @@ const fuck_tts = (word: string) => {
                   class="w-1 h-1 rounded-full bg-neutral-content transition pointer-events-auto"
                   :class="{'!bg-accent': k === showIndex}" @click="showIndex = k"></button>
         </div>
-        <button class="h-full bg-neutral-content p-1 cursor-pointer" @click="fuck_swap">
-          <Transition name="phonetic" mode="out-in">
+        <button class="h-full bg-neutral-content/50 p-1 cursor-pointer" @click="fuck_swap">
+          <Transition name="swap-btn" mode="out-in">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" :key="showIndex">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                     d="M11 8L7 4m0 0L3 8m4-4v16m6-4l4 4m0 0l4-4m-4 4V4"/>
@@ -87,6 +88,19 @@ const fuck_tts = (word: string) => {
 
 .phonetic-leave-to {
   @apply opacity-0 -translate-y-4;
+}
+
+.swap-btn-enter-active,
+.swap-btn-leave-active {
+  @apply transition;
+}
+
+.swap-btn-enter-from {
+  @apply opacity-0 translate-y-1;
+}
+
+.swap-btn-leave-to {
+  @apply opacity-0 -translate-y-1;
 }
 
 .fadeIn-enter-active,

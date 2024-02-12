@@ -26,10 +26,12 @@ const nav = ref([
 ])
 
 const fuck_callsign = () => {
-  const callsign = useRandomCallsign()
-  const callsign_phonetic = callsign.split('').map(w => persist.phonetic_dict[w] ? persist.phonetic_dict[w][0]?.word : w).join()
+  const callsign = useRandomCallsign(Object.values(persist.callsign_templates)[Math.floor(Math.random() * Object.keys(persist.callsign_templates).length)])
+  const callsign_phonetic = callsign.split('').map(w => persist.phonetic_dict[w] ? persist.phonetic_dict[w][Math.floor(Math.random() * persist.phonetic_dict[w].length)]?.word : w).join(' ')
   console.log(callsign, callsign_phonetic)
-  tts(callsign_phonetic, 1.5)
+  tts(persist.random_cq(callsign_phonetic), 1, 1, () => {
+    message.info(callsign)
+  })
 }
 </script>
 

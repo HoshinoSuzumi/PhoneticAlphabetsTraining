@@ -29,8 +29,27 @@ export const usePersistence = defineStore('persistence', () => {
         'Y': [{word: 'yankee', ipa: '/ˈjæŋki/'}],
         'Z': [{word: 'zulu', ipa: '/ˈzuːluː/'}],
     })
+    const callsign_templates: {
+        [key: string]: string
+    } = {
+        'China': 'B$c{A|D|G-I}$n{1-8}$c3{A-W}',
+        'HongKong': 'VR2$c3{A-W}',
+        'Macau': 'XX$n$c3{A-W}'
+    }
+
+    function random_cq(callsign: string) {
+        const cqs = [
+            `${callsign}`,
+            `CQ ${callsign} calling cq and standing by.`,
+            `CQ CQ CQ, This is ${callsign}, standing by.`,
+            `My call sign is ${callsign}, over.`,
+        ]
+        return cqs[Math.floor(Math.random() * cqs.length)]
+    }
 
     return {
-        phonetic_dict
+        phonetic_dict,
+        callsign_templates,
+        random_cq
     }
 })
