@@ -52,7 +52,7 @@ const map_moveto = (lon: number, lat: number) => {
   map.value.centerAndZoom(new BMapGL.Point(lon, lat), 11);
 }
 
-const map_draw_bound = (locator: string, place_pin: boolean = true) => {
+const map_draw_bound = (locator: string) => {
   if (map_bounds_list.value.find(item => locator === item)) return
   map_bounds_list.value.push(locator)
   const bound = useMaidenheadGrid(locator).to_bound()
@@ -67,16 +67,24 @@ const map_draw_bound = (locator: string, place_pin: boolean = true) => {
   ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5})
   map.value.addOverlay(bound_rectangle)
 
-  if (place_pin) {
-    let center_point = new BMapGL.Point(
-        bound[0] + (bound[2] - bound[0]) / 2,
-        bound[1] + (bound[3] - bound[1]) / 2
-    )
-    let marker = new BMapGL.Marker(center_point)
-    let label = new BMapGL.Label(locator)
-    marker.setLabel(label)
-    map.value.addOverlay(marker)
-  }
+  let center_point = new BMapGL.Point(
+      bound[0] + (bound[2] - bound[0]) / 2,
+      bound[1] + (bound[3] - bound[1]) / 2
+  )
+  let label = new BMapGL.Label(locator, {
+    position: center_point,
+    offset: new BMapGL.Size(-24, -8),
+  })
+  label.setStyle({
+    color: '#5d5d5d',
+    borderRadius: '0',
+    borderWidth: '0',
+    backgroundColor: '#00000000',
+    fontWeight: 'bold',
+    fontSize: '12px',
+    lineHeight: '12px',
+  });
+  map.value.addOverlay(label)
 }
 
 onMounted(() => {
@@ -107,11 +115,9 @@ onMounted(() => {
     map_moveto(location.value.longitude, location.value.latitude)
 
     // render grid zone
-    map_draw_bound(useMaidenheadGrid().from_coords(location.value.longitude, location.value.latitude) as string, false)
+    map_draw_bound(useMaidenheadGrid().from_coords(location.value.longitude, location.value.latitude) as string)
     let real_point = new BMapGL.Point(location.value.longitude, location.value.latitude)
     let marker = new BMapGL.Marker(real_point)
-    let label = new BMapGL.Label(location.value.grid)
-    marker.setLabel(label)
     map.value.addOverlay(marker)
   })
 })
