@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import {computed, type PropType} from "vue";
+
 const emit = defineEmits(['input', 'change', 'update:modelValue'])
 const props = defineProps({
   label: {
@@ -23,6 +25,11 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false
+  },
+  align: {
+    type: String as PropType<'bottom' | 'top'>,
+    required: false,
+    default: 'bottom'
   }
 })
 
@@ -30,6 +37,14 @@ const selectWrapperRef = ref()
 const selectRef = ref()
 const optionsRef = ref()
 
+const optionsAlign = computed(() => {
+  switch (props.align) {
+    case "bottom":
+      return 'top-full mt-2'
+    case "top":
+      return 'bottom-full mb-2'
+  }
+})
 const hasAnyIcon = computed(() => props.items.some(item => item.icon))
 const selectedItem = computed(() => props.items.find(item => item.value === props.modelValue) as SelectItem)
 const optionsExpanded = ref(false)
@@ -74,15 +89,15 @@ onMounted(() => {
           class="inline-block w-5 h-5 pointer-events-none" />
         <Transition name="select-item" mode="out-in">
           <span class="leading-snug whitespace-nowrap text-sm" :key="selectedItem?.value">{{
-            selectedItem?.label || selectedItem?.value || 'Select an option'
-          }}</span>
+              selectedItem?.label || selectedItem?.value || 'Select an option'
+            }}</span>
         </Transition>
         <Icon name="tabler:dots-vertical"
           class="absolute bg-neutral-50 text-gray-500 dark:bg-neutral-700/50 dark:text-neutral-500 inset-y-0 right-0 h-full" />
       </button>
-      <div class="absolute top-full mt-2 right-0 w-fit rounded-md border overflow-hidden transition shadow-lg opacity-0 pointer-events-none
-                bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-800 z-50"
-        :class="{ 'opacity-100 pointer-events-auto': optionsExpanded, '-translate-y-4': !optionsExpanded }"
+      <div class="absolute right-0 w-full rounded-md border overflow-x-hidden overflow-y-auto transition shadow-lg opacity-0
+                bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-800 z-50 max-h-60"
+           :class="{ 'opacity-100 pointer-events-auto': optionsExpanded, '-translate-y-4 pointer-events-none': !optionsExpanded, [optionsAlign]: optionsAlign }"
         ref="optionsRef">
         <div class="flex items-center gap-2.5 px-2 py-2 cursor-pointer
                   dark:text-neutral-300 font-['Nunito'] transition whitespace-nowrap

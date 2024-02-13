@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import {ref} from 'vue';
 import {useRoute} from 'vue-router';
+import {useTTS} from "~/composables/useTTS";
 
 const route = useRoute()
+const tts = useTTS()
 
 const nav = ref([
   {
@@ -16,6 +18,14 @@ const nav = ref([
     icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20h4L18.5 9.5a1.5 1.5 0 0 0-4-4L4 16v4m9.5-13.5l4 4"/></svg>'
   },
 ])
+
+const selected_voice = ref<SpeechSynthesisVoice | null>(null)
+watch(selected_voice, value => tts.set_voice(value))
+
+const current_speed = ref(tts.current_speed.value + '')
+const current_pitch = ref(tts.current_pitch.value + '')
+watch(current_speed, value => tts.current_speed.value = parseFloat(parseFloat(value).toFixed(1)))
+watch(current_pitch, value => tts.current_pitch.value = parseFloat(parseFloat(value).toFixed(1)))
 </script>
 
 <template>
@@ -64,9 +74,53 @@ const nav = ref([
           </a>
         </div>
       </div>
-      <div class="h-full">
+      <div class="min-h-[calc(100vh-4rem)]">
         <slot/>
       </div>
+      <footer class="footer p-10 bg-base-300 text-base-content">
+        <aside>
+          <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 10v7m-5-5a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2zm9 8V9a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2"/>
+          </svg>
+          <p class="text-neutral-500 font-mono">
+            A part of <a href="https://c5r.app" class="link link-hover font-bold" target="_blank">CTFever</a><br/>
+            Fantastic toolkit for CTFers and everyone
+          </p>
+        </aside>
+        <div>
+          <h6 class="footer-title">Speech Settings</h6>
+          <fieldset class="form-control w-72">
+            <UniSelect :items="[
+              {label: tts.get_voices().value.length === 0 ? '无法索引系统声音' : '系统默认', value: null},
+            ...tts.get_voices().value.map(item => {return {
+              label: `${item.lang} - ${item.name}`,
+              value: item
+            }})]" v-model="selected_voice" align="top"/>
+            <h6 class="text-xs font-bold text-neutral-400 mt-0.5">
+              语音来自你的浏览器和系统 TTS 服务
+            </h6>
+          </fieldset>
+          <fieldset class="form-control w-72">
+            <div class="join items-center space-x-2">
+              <h2 class="font-mono inline-flex flex-col items-center">
+                <span class="leading-none">SPEED</span>
+                <span class="text-xs leading-none">{{ tts.current_speed }}</span>
+              </h2>
+              <input type="range" min="0.5" max="2.0" v-model="current_speed" class="range range-xs" step="0.1"/>
+            </div>
+          </fieldset>
+          <fieldset class="form-control w-72">
+            <div class="join items-center space-x-2">
+              <h2 class="font-mono inline-flex flex-col items-center leading-none">
+                <span class="leading-none">PITCH</span>
+                <span class="text-xs leading-none">{{ tts.current_pitch }}</span>
+              </h2>
+              <input type="range" min="0.5" max="2.0" v-model="current_pitch" class="range range-xs" step="0.1"/>
+            </div>
+          </fieldset>
+        </div>
+      </footer>
     </div>
     <div class="drawer-side">
       <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>

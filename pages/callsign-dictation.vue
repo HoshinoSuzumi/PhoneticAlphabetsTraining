@@ -52,8 +52,8 @@ const fuck_new_challenge = () => {
 
 const fuck_speech = (slow: boolean = false) => {
   tts.speech(challenge.value.speech, {
-    rate: slow ? 0.8 : 1.0,
-    interrupt: true
+    interrupt: true,
+    rate: slow ? 0.6 : void 0
   })
   answer_field.value.focus()
 }
@@ -111,7 +111,7 @@ onMounted(() => {
             {{ challenge.answer || '------' }}
           </h1>
         </div>
-        <button class="btn btn-square btn-lg btn-primary" @click="fuck_speech">
+        <button class="btn btn-square btn-lg btn-primary" @click="fuck_speech(false)">
           <IconVolume class="w-8 h-8"/>
         </button>
       </div>
