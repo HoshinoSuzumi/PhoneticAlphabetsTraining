@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import {useRandomCallsign} from "~/composables/useRandomCallsign";
 import {usePersistence} from "~/composables/usePersistence";
-import {useSpeech} from "~/composables/useSpeech";
+import {useTTS} from "~/composables/useTTS";
 import {useMessage} from "~/composables/uni/useMessage";
 
 useHead({
@@ -11,7 +11,7 @@ useHead({
 
 const message = useMessage()
 const persist = usePersistence()
-const tts = useSpeech()
+const tts = useTTS()
 
 const answer_field = ref()
 const input_answer = ref('')
@@ -36,8 +36,12 @@ const challenge = ref({
 
 const fuck_new_challenge = () => {
   answer_state.value = 0
+  const full_phonetic_dict = {
+    ...persist.phonetic_dict,
+    ...persist.number_phonetic_dict
+  }
   const callsign = useRandomCallsign(Object.values(persist.callsign_templates)[Math.floor(Math.random() * Object.keys(persist.callsign_templates).length)])
-  const callsign_phonetic = callsign.split('').map(w => persist.phonetic_dict[w] ? persist.phonetic_dict[w][Math.floor(Math.random() * persist.phonetic_dict[w].length)]?.word : w).join(' ')
+  const callsign_phonetic = callsign.split('').map(w => full_phonetic_dict[w] ? full_phonetic_dict[w][Math.floor(Math.random() * full_phonetic_dict[w].length)]?.word : w).join(' ')
   challenge.value = {
     speech: persist.random_cq(callsign_phonetic),
     answer: callsign,
@@ -47,7 +51,10 @@ const fuck_new_challenge = () => {
 }
 
 const fuck_speech = (slow: boolean = false) => {
-  tts(challenge.value.speech, slow ? 0.8 : 1.0)
+  tts.speech(challenge.value.speech, {
+    rate: slow ? 0.8 : 1.0,
+    interrupt: true
+  })
   answer_field.value.focus()
 }
 

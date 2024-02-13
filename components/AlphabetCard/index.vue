@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import type {PhoneticSet} from "~/components/AlphabetCard/index";
-import type {PropType} from "vue";
-import {useSpeech} from "~/composables/useSpeech";
+import {computed, type PropType} from "vue";
+import {useTTS} from "~/composables/useTTS";
 import {useMessage} from "~/composables/uni/useMessage";
 
 useHead({
   title: '字母解释法速查表 · HAM c5r'
 })
 
-const tts = useSpeech()
+const tts = useTTS()
 const message = useMessage()
 
 const props = defineProps({
@@ -16,7 +16,20 @@ const props = defineProps({
     type: Array as PropType<PhoneticSet[]>,
     require: true,
     default: []
-  }
+  },
+  char: {
+    type: String,
+    default: ''
+  },
+  // number: {
+  //   type: Number,
+  //   default: NaN
+  // }
+})
+
+const is_number = computed(() => {
+  const char_code = props.char.charCodeAt(0)
+  return '0'.charCodeAt(0) <= char_code && char_code <= '9'.charCodeAt(0)
 })
 
 const showIndex = ref(0)
@@ -31,11 +44,12 @@ const fuck_swap = () => {
 }
 
 const fuck_tts = (word: string) => {
-  const ret = tts(word, 1.0, 1.0, () => {
-    speaking.value = false
+  tts.speech(word, {
+    onstart: () => speaking.value = true,
+    onend: () => speaking.value = false,
+    onerror: (err) => err.error === 'interrupted' ? speaking.value = false : void 0,
+    interrupt: true
   })
-  if (ret === -2) message.info('请等待当前播放完毕')
-  if (ret === 0) speaking.value = true
 }
 </script>
 
@@ -46,14 +60,15 @@ const fuck_tts = (word: string) => {
       <Transition name="phonetic" mode="out-in">
         <div class="flex flex-col pl-2 py-2 pt-1" :key="showIndex">
           <h1 class="cursor-pointer hover:drop-shadow group flex flex-row items-end"
+              :class="{'space-x-1': is_number}"
               @click="fuck_tts(phonetics[showIndex].word)">
-            <span class="text-2xl text-accent font-bold">
-              {{ phonetics[showIndex].word.charAt(0).toUpperCase() }}
-            </span>
+              <span class="text-2xl text-accent font-bold">
+                {{ char.toUpperCase() }}
+              </span>
             <span class="text-lg text-accent-content font-normal"
                   :class="{'!text-accent': speaking}">
-              {{ phonetics[showIndex].word.slice(1) }}
-            </span>
+                {{ phonetics[showIndex].word.slice(is_number ? 0 : 1) }}
+              </span>
             <Transition name="fadeIn" mode="out-in">
               <IconVolume v-if="speaking" class="inline-block self-center text-lg text-accent ml-0.5 transition"/>
             </Transition>

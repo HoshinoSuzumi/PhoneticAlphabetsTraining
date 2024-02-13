@@ -28,6 +28,18 @@ export const usePersistence = defineStore('persistence', () => {
         'X': [{word: 'x-ray', ipa: '/ˈeks reɪ/'}],
         'Y': [{word: 'yankee', ipa: '/ˈjæŋki/'}],
         'Z': [{word: 'zulu', ipa: '/ˈzuːluː/'}],
+    });
+    const number_phonetic_dict = ref<PhoneticDictionary>({
+        '0': [{word: 'zero', ipa: '/ˈzɪroʊ/'}],
+        '1': [{word: 'one', ipa: '/wʌn/'}],
+        '2': [{word: 'two', ipa: '/tuː/'}],
+        '3': [{word: 'three', ipa: '/θriː/'}],
+        '4': [{word: 'four', ipa: '/fɔːr/'}],
+        '5': [{word: 'five', ipa: '/faɪv/'}],
+        '6': [{word: 'six', ipa: '/sɪks/'}],
+        '7': [{word: 'seven', ipa: '/ˈsevn/'}],
+        '8': [{word: 'eight', ipa: '/eɪt/'}],
+        '9': [{word: 'nine', ipa: '/naɪn/'}],
     })
     const callsign_templates: {
         [key: string]: string
@@ -49,6 +61,7 @@ export const usePersistence = defineStore('persistence', () => {
 
     return {
         phonetic_dict,
+        number_phonetic_dict,
         callsign_templates,
         random_cq
     }

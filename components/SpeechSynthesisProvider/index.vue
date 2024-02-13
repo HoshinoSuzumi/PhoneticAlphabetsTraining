@@ -1,31 +1,44 @@
 <script setup lang="ts">
-import type {fuck_tts} from "~/components/SpeechSynthesisProvider/index";
+import type {SpeechOptions, TTSApi} from "~/components/SpeechSynthesisProvider/index";
 
 const synth = ref<SpeechSynthesis | null>(null)
-const fuck_tts: fuck_tts = (
-    content: string,
-    rate: number = 1.0,
-    pitch: number = 1.0,
-    onend: ((this: SpeechSynthesisUtterance, ev: SpeechSynthesisEvent) => any) | null = null,
-    lang: string = 'en-US'
-): number => {
-  if (!content) return -1
-  if (!synth.value) return -1
-  if (synth.value.speaking) return -2
 
-  const utterance = new SpeechSynthesisUtterance(content)
-  utterance.pitch = pitch
-  utterance.rate = rate
-  utterance.lang = lang
+const tts_api: TTSApi = {
+  get_voices(lang: string | undefined): Array<any> {
+    if (!synth.value) return []
+    return synth.value.getVoices().sort(function (a, b) {
+      const a_name = a.name.toUpperCase();
+      const b_name = b.name.toUpperCase();
+      if (a_name < b_name) {
+        return -1;
+      } else if (a_name == b_name) {
+        return 0;
+      } else {
+        return +1;
+      }
+    }).filter(v => lang ? lang === v.lang : true)
+  },
+  shut_up(): void {
+    synth.value?.cancel()
+  },
+  speech(text: string, options: SpeechOptions | undefined): void {
+    if (!text) throw new Error('no speech content specified.')
+    if (!synth.value) throw new Error('speechSynthesis is not available now.')
+    if (options?.interrupt) this.shut_up()
 
-  if (onend) utterance.onend = onend
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.rate = options?.rate || 1.0
+    utterance.pitch = options?.pitch || 1.0
+    utterance.lang = options?.lang || 'en-US'
+    if (options?.onstart) utterance.onstart = options.onstart
+    if (options?.onend) utterance.onend = options.onend
+    if (options?.onerror) utterance.onerror = options.onerror
 
-  synth.value.speak(utterance)
-  return 0
+    synth.value.speak(utterance)
+  }
 }
 
-
-provide('fuck_tts', fuck_tts)
+provide('tts_api', tts_api)
 
 onMounted(() => {
   synth.value = window.speechSynthesis

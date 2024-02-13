@@ -9,7 +9,10 @@ const persist = usePersistence()
   <div class="p-4">
     <div
         class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 md:gap-4">
-      <AlphabetCard v-for="(words, alphabet) in persist.phonetic_dict" :key="alphabet" :phonetics="words"/>
+      <AlphabetCard v-for="(words, alphabet) in persist.phonetic_dict" :key="alphabet" :phonetics="words"
+                    :char="alphabet"/>
+      <AlphabetCard v-for="(words, num) in persist.number_phonetic_dict" :key="num" :phonetics="words"
+                    :char="num"/>
     </div>
   </div>
 </template>
