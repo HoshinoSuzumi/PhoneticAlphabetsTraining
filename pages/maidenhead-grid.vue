@@ -4,6 +4,7 @@ import {computed, ref} from "vue";
 import {useMaidenheadGrid} from "~/composables/useMaidenheadGrid";
 
 useHead({
+  title: '梅登黑德网格定位 · HAM c5r',
   script: [
     {src: '//api.map.baidu.com/api?type=webgl&v=1.0&ak=G53LAC6duWQm9TExskrP5Fxvn0QZ6oU9'}
   ]
