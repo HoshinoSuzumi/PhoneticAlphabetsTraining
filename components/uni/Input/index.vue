@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {PropType} from 'nuxt/dist/app/compat/capi';
+import type {PropType} from "vue";
 
 const emit = defineEmits(['input', 'change', 'update:modelValue'])
 const props = defineProps({

@@ -2,12 +2,14 @@
 import {useDayjs} from "#dayjs";
 import {computed, ref} from "vue";
 import {useMaidenheadGrid} from "~/composables/useMaidenheadGrid";
+import {useMessage} from "~/composables/uni/useMessage";
 
 useHead({
   title: '梅登黑德网格定位 · HAM c5r'
 })
 
 const dayjs = useDayjs()
+const message = useMessage()
 
 const clock_interval = ref()
 const now_time = ref(dayjs())
@@ -18,6 +20,10 @@ const local_time_offset_hours = computed(() => {
   else ret = `${offset_hours}`
   return ret
 })
+
+const input_locator = ref('')
+const input_lon = ref('')
+const input_lat = ref('')
 
 const map = ref<any>(null)
 const map_bounds_list = ref<string[]>([])
@@ -50,6 +56,7 @@ const map_init = () => {
   // map init
   map.value = new BMapGL.Map('map-container', {
     enableDblclickZoom: false,
+    enableHighResolution: true,
     displayOptions: {
       building: false
     }
@@ -80,8 +87,43 @@ const map_moveto = (lon: number, lat: number) => {
   map.value.centerAndZoom(new BMapGL.Point(lon, lat), 11);
 }
 
+const map_clear = () => {
+  map.value.clearOverlays()
+  map_bounds_list.value = []
+}
+
+const map_locate_to_coords = (lon: number, lat: number) => {
+  if (!lon || !lat) {
+    message.warning('请输入正确的经纬度')
+    return
+  }
+  map_moveto(lon, lat)
+  const locator = useMaidenheadGrid().from_coords(lon, lat) as string
+  map_draw_bound(locator)
+  let marker = new BMapGL.Marker(new BMapGL.Point(lon, lat))
+  map.value.addOverlay(marker)
+}
+
+const map_locate_to_grid = (locator: string) => {
+  if (!locator || locator.length < 6) {
+    message.warning('请输入正确的坐标')
+    return
+  }
+  map_draw_bound(locator)
+  const bound = useMaidenheadGrid(locator).to_bound()
+  let center_lonlat = [bound[0] + (bound[2] - bound[0]) / 2, bound[1] + (bound[3] - bound[1]) / 2]
+  let center_point = new BMapGL.Point(
+      center_lonlat[0], center_lonlat[1]
+  )
+  let marker = new BMapGL.Marker(center_point)
+  map.value.addOverlay(marker)
+  map_moveto(center_lonlat[0], center_lonlat[1])
+  input_lon.value = center_lonlat[0].toFixed(6)
+  input_lat.value = center_lonlat[1].toFixed(6)
+}
+
 const map_draw_bound = (locator: string) => {
-  if (map_bounds_list.value.find(item => locator === item)) return
+  if (map_bounds_list.value.find(item => locator.toLowerCase() === item.toLowerCase())) return
   map_bounds_list.value.push(locator)
   const bound = useMaidenheadGrid(locator).to_bound()
   let point_start = new BMapGL.Point(bound[0], bound[1])
@@ -202,7 +244,13 @@ onBeforeUnmount(() => {
         </div>
         <div class="px-4">
           <button class="btn btn-block" :disabled="locating"
-                  @click="update_location().then(loc => {map_moveto(loc.coords.longitude, loc.coords.latitude)})">
+                  @click="update_location().then(loc => {
+                    location.longitude = loc.coords.longitude
+                    location.latitude = loc.coords.latitude
+                    location.grid = useMaidenheadGrid().from_coords(location.longitude, location.latitude) as string
+                    map_moveto(location.longitude, location.latitude)
+                    map_draw_bound(useMaidenheadGrid().from_coords(location.longitude, location.latitude) as string)
+                  })">
             <span v-if="locating" class="loading loading-spinner"></span>
             <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
               <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -214,8 +262,55 @@ onBeforeUnmount(() => {
           </button>
         </div>
       </div>
-      <div class="md:row-span-3 bg-white flex justify-center items-center">
-        <h2 class="text-sm text-neutral-300 font-bold">前面的区域，以后再来探索吧!</h2>
+      <div class="md:row-span-3 bg-white p-2">
+        <!--        <h2 class="text-sm text-neutral-300 font-bold">前面的区域，以后再来探索吧!</h2>-->
+        <div class="space-y-2">
+          <fieldset class="flex flex-row gap-2">
+            <UniInput class="w-full" v-model="input_locator" placeholder="梅登黑德网格 Grid Locator"/>
+            <UniButton @click="map_locate_to_grid(input_locator)">
+              <template #icon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24">
+                  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/>
+                    <path d="m12 17l-1-4l-4-1l9-4z"/>
+                  </g>
+                </svg>
+              </template>
+              跳转
+            </UniButton>
+          </fieldset>
+          <hr>
+          <fieldset class="flex flex-row flex-wrap gap-2">
+            <UniInput class="flex-1" v-model="input_lon" placeholder="经度 Lng"/>
+            <UniInput class="flex-1" v-model="input_lat" placeholder="纬度 Lat"/>
+            <UniButton class="w-full xl:w-auto"
+                       @click="map_locate_to_coords(parseFloat(input_lon), parseFloat(input_lat))">
+              <template #icon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24">
+                  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/>
+                    <path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/>
+                  </g>
+                </svg>
+              </template>
+              跳转
+            </UniButton>
+          </fieldset>
+          <hr>
+          <fieldset>
+            <UniButton class="w-full" @click="map_clear()">
+              <template #icon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24">
+                  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/>
+                    <path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/>
+                  </g>
+                </svg>
+              </template>
+              清除标记
+            </UniButton>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
