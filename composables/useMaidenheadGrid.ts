@@ -18,7 +18,7 @@ export const useMaidenheadGrid = (locator?: string) => {
          * @param toBound
          * @return string   梅登黑德
          */
-        from_coords(longitude: number, latitude: number, toBound: boolean = false): string | number[] {
+        from_coords(longitude: number, latitude: number, toBound: boolean = false): string | number[][] {
             // field
             let field1 = Math.floor((180 + longitude) / 20)
             let field2 = Math.floor((90 + latitude) / 10)
@@ -42,7 +42,7 @@ export const useMaidenheadGrid = (locator?: string) => {
             let lon = letter2index(inst.locator[0]) * 20 + parseInt(inst.locator[2]) * 2 + letter2index(inst.locator[4]) * 5 / 60 - 180;
             let lat = letter2index(inst.locator[1]) * 10 + parseInt(inst.locator[3]) + letter2index(inst.locator[5]) * 2.5 / 60 - 90;
 
-            return [lon, lat, lon + 5 / 60, lat + 2.5 / 60];
+            return [[lon, lat], [lon + 5 / 60, lat + 2.5 / 60]];
         }
     }
 }
