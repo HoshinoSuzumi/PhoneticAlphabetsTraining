@@ -58,8 +58,8 @@ const fuck_tts = (word: string) => {
     <div
         class="flex flex-row relative overflow-hidden justify-between rounded-lg bg-base-100 border shadow-sm border-neutral-content border-b-4">
       <Transition name="phonetic" mode="out-in">
-        <div class="flex flex-col pl-2 py-2 pt-1" :key="showIndex">
-          <h1 class="cursor-pointer hover:drop-shadow group flex flex-row items-end"
+        <div class="w-full flex flex-col p-2 pt-1" :class="{'pr-3': phonetics.length > 1}" :key="showIndex">
+          <h1 class="w-fit cursor-pointer hover:drop-shadow group flex flex-row items-end"
               :class="{'space-x-1': is_number}"
               @click="fuck_tts(phonetics[showIndex].word)">
               <span class="text-2xl text-accent font-bold">
@@ -73,7 +73,13 @@ const fuck_tts = (word: string) => {
               <IconVolume v-if="speaking" class="inline-block self-center text-lg text-accent ml-0.5 transition"/>
             </Transition>
           </h1>
-          <span class="text-xs text-neutral-400 font-ipa font-bold">{{ phonetics[showIndex].ipa }}</span>
+          <div class="inline-flex justify-between items-center">
+            <span class="text-xs text-neutral-400 font-ipa font-bold">{{ phonetics[showIndex].ipa }}</span>
+            <span v-if="phonetics[showIndex].tag && phonetics.length > 1"
+                  class="text-xs text-neutral-400 font-mono font-bold">
+              {{ phonetics[showIndex].tag.label }}
+            </span>
+          </div>
         </div>
       </Transition>
       <div class="relative" v-if="phonetics.length > 1">
