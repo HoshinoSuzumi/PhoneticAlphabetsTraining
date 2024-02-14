@@ -82,7 +82,7 @@ watch(current_pitch, value => tts.current_pitch.value = parseFloat(parseFloat(va
       <div class="min-h-[calc(100vh-4rem)]">
         <slot/>
       </div>
-      <footer class="footer p-10 bg-base-300 text-base-content">
+      <footer class="footer p-10 bg-base-300 text-base-content justify-between">
         <aside>
           <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

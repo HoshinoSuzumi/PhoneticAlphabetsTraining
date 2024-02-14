@@ -363,46 +363,49 @@ onBeforeUnmount(() => {
             </UniButton>
           </fieldset>
         </div>
-        <div class="bg-neutral-200 mt-2 p-4 rounded-lg grid grid-cols-2 divide-x divide-neutral-400">
-          <div class="flex justify-center items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24">
-              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/>
-                <path d="M11.5 3a11.2 11.2 0 0 0 0 18m1-18a11.2 11.2 0 0 1 0 18M12 3v18"/>
-              </g>
-            </svg>
-            <span class="text-xl font-bold font-mono leading-none">
+        <Transition name="fade-in" mode="out-in">
+          <div v-if="t_location.longitude || t_location.latitude || t_location.grid"
+               class="bg-neutral-200 mt-2 p-4 rounded-lg grid grid-cols-2 divide-x divide-neutral-400">
+            <div class="flex justify-center items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/>
+                  <path d="M11.5 3a11.2 11.2 0 0 0 0 18m1-18a11.2 11.2 0 0 1 0 18M12 3v18"/>
+                </g>
+              </svg>
+              <span class="text-xl font-bold font-mono leading-none">
               <span class="text-xs text-neutral-500 font-sans uppercase">longitude</span><br/>
               {{ t_location?.longitude?.toFixed(5) || '-' }}
             </span>
-          </div>
-          <div class="flex justify-center items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0m1.6-5h14.8M3 12h18M4.6 17h14.8"/>
-            </svg>
-            <span class="text-xl font-bold font-mono leading-none">
+            </div>
+            <div class="flex justify-center items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0m1.6-5h14.8M3 12h18M4.6 17h14.8"/>
+              </svg>
+              <span class="text-xl font-bold font-mono leading-none">
               <span class="text-xs text-neutral-500 font-sans uppercase">latitude</span><br/>
               {{ t_location?.latitude?.toFixed(5) || '-' }}
             </span>
-          </div>
-          <div class="flex justify-center items-center gap-1.5 col-span-2 xl:col-span-1 border-none mt-2">
-            <!--            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>-->
-            <span class="text-2xl font-bold font-sans text-center">
+            </div>
+            <div class="flex justify-center items-center gap-1.5 col-span-2 xl:col-span-1 border-none mt-2">
+              <!--            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>-->
+              <span class="text-2xl font-bold font-sans text-center">
               <span class="text-xs text-neutral-500 font-sans uppercase">DISTANCE</span><br/>
               {{
-                converted_distance || '--'
-              }}
+                  converted_distance || '--'
+                }}
             </span>
-          </div>
-          <div class="flex justify-center items-center gap-1.5 col-span-2 xl:col-span-1 border-none mt-2">
-            <!--            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>-->
-            <span class="text-2xl font-bold font-sans text-center">
+            </div>
+            <div class="flex justify-center items-center gap-1.5 col-span-2 xl:col-span-1 border-none mt-2">
+              <!--            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>-->
+              <span class="text-2xl font-bold font-sans text-center">
               <span class="text-xs text-neutral-500 font-sans uppercase">maidenhead</span><br/>
               <span class="text-green-500">{{ t_location.grid || '------' }}</span>
             </span>
+            </div>
           </div>
-        </div>
+        </Transition>
       </div>
     </div>
   </div>
@@ -411,5 +414,15 @@ onBeforeUnmount(() => {
 <style>
 .amap-container {
   @apply z-0;
+}
+
+.fade-in-enter-active,
+.fade-in-leave-active {
+  @apply transition duration-300
+}
+
+.fade-in-leave-to,
+.fade-in-enter-from {
+  @apply opacity-0 translate-y-4
 }
 </style>
