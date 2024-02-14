@@ -108,7 +108,7 @@ onMounted(() => {
           }" @click="!option.disabled ? handleOptionSelect(option) : void 0">
           <div class="inline-block w-5 h-5" v-if="hasAnyIcon && !option.icon"></div>
           <Icon :name="(option?.icon)" class="inline-block w-5 h-5" v-if="option.icon" />
-          <span class="leading-none whitespace-nowrap text-sm">{{ option.label || 'No label' }}</span>
+          <span class="leading-none whitespace-nowrap text-sm font-sans">{{ option.label || 'No label' }}</span>
         </div>
       </div>
     </div>
