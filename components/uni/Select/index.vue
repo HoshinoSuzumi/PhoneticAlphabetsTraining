@@ -95,8 +95,8 @@ onMounted(() => {
         <Icon name="tabler:dots-vertical"
           class="absolute bg-neutral-50 text-gray-500 dark:bg-neutral-700/50 dark:text-neutral-500 inset-y-0 right-0 h-full" />
       </button>
-      <div class="absolute right-0 w-full rounded-md border overflow-x-hidden overflow-y-auto transition shadow-lg opacity-0
-                bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-800 z-50 max-h-60"
+      <div class="absolute right-0 w-full md:w-fit rounded-md border overflow-x-hidden overflow-y-auto transition shadow-lg opacity-0
+                bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-800 z-50 max-h-64"
            :class="{ 'opacity-100 pointer-events-auto': optionsExpanded, '-translate-y-4 pointer-events-none': !optionsExpanded, [optionsAlign]: optionsAlign }"
         ref="optionsRef">
         <div class="flex items-center gap-2.5 px-2 py-2 cursor-pointer
