@@ -138,11 +138,39 @@ export const usePersistence = defineStore('persistence', () => {
     function random_cq(callsign: string) {
         const cqs = [
             `${callsign}`,
-            `CQ ${callsign} calling cq and standing by.`,
+            `CQ ${callsign}, calling cq and standing by.`,
             `CQ CQ CQ, This is ${callsign}, standing by.`,
             `My call sign is ${callsign}, over.`,
         ]
         return cqs[Math.floor(Math.random() * cqs.length)]
+    }
+
+    function random_reply(type: 'cq' | 'qrz', callsign: string) {
+        const persist = usePersistence()
+        const full_phonetic_dict = {
+            ...persist.phonetic_dict,
+            ...persist.number_phonetic_dict
+        }
+        const callsign_phonetic = callsign.split('').map(w => full_phonetic_dict[w] ? full_phonetic_dict[w][Math.floor(Math.random() * full_phonetic_dict[w].length)]?.word : w)
+
+        const cqs = [
+            `${callsign_phonetic}`,
+            `CQ, ${callsign_phonetic}, calling cq and standing by.`,
+            `CQ CQ CQ, This is ${callsign_phonetic}, standing by.`,
+            `My call sign is ${callsign_phonetic}, over.`,
+        ]
+        const qrz = [
+            `This is ${callsign_phonetic.join('!')}, ${callsign.split('')}`,
+            `${callsign_phonetic.join('!')}`
+        ]
+        switch (type) {
+            case "cq":
+                return cqs[Math.floor(Math.random() * cqs.length)]
+            case "qrz":
+                return qrz[Math.floor(Math.random() * qrz.length)]
+            default:
+                return ''
+        }
     }
 
     return {
@@ -150,6 +178,7 @@ export const usePersistence = defineStore('persistence', () => {
         phonetic_dict,
         number_phonetic_dict,
         callsign_templates,
-        random_cq
+        random_cq,
+        random_reply
     }
 })

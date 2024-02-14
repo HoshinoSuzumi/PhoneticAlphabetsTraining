@@ -41,9 +41,10 @@ const fuck_new_challenge = () => {
     ...persist.number_phonetic_dict
   }
   const callsign = useRandomCallsign(Object.values(persist.callsign_templates)[Math.floor(Math.random() * Object.keys(persist.callsign_templates).length)])
-  const callsign_phonetic = callsign.split('').map(w => full_phonetic_dict[w] ? full_phonetic_dict[w][Math.floor(Math.random() * full_phonetic_dict[w].length)]?.word : w).join(' ')
+  // const callsign_phonetic = callsign.split('').map(w => full_phonetic_dict[w] ? full_phonetic_dict[w][Math.floor(Math.random() * full_phonetic_dict[w].length)]?.word : w).join(',')
+  // const callsign_phonetic = 'boston delta six papa mike egypt'.split(' ').map(w => full_phonetic_dict[w] ? full_phonetic_dict[w][Math.floor(Math.random() * full_phonetic_dict[w].length)]?.word : w).join('...')
   challenge.value = {
-    speech: persist.random_cq(callsign_phonetic),
+    speech: persist.random_reply('cq', callsign),
     answer: callsign,
   }
   input_answer.value = ''
@@ -54,6 +55,13 @@ const fuck_speech = (slow: boolean = false) => {
   tts.speech(challenge.value.speech, {
     interrupt: true,
     rate: slow ? 0.6 : void 0
+  })
+  answer_field.value.focus()
+}
+
+const fuck_qrz = () => {
+  tts.speech(persist.random_reply('qrz', challenge.value.answer), {
+    interrupt: true,
   })
   answer_field.value.focus()
 }
@@ -111,9 +119,16 @@ onMounted(() => {
             {{ challenge.answer || '------' }}
           </h1>
         </div>
-        <button class="btn btn-square btn-lg btn-primary" @click="fuck_speech(false)">
-          <IconVolume class="w-8 h-8"/>
-        </button>
+        <div class="flex gap-2">
+          <button class="btn" @click="fuck_speech(false)">
+            <IconReload class="w-6 h-6"/>
+            重播
+          </button>
+          <button class="btn" @click="fuck_qrz()">
+            <IconMessageQuestion class="w-6 h-6"/>
+            QRZ
+          </button>
+        </div>
       </div>
       <div class="w-full h-fit flex flex-row justify-center select-none p-2">
         <p class="text-xs text-neutral-500 font-['MiSans'] font-medium">出现的呼号均为随机生成，仅供听力训练使用</p>

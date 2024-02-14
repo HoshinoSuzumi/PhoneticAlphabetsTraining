@@ -4,10 +4,7 @@ import {computed, ref} from "vue";
 import {useMaidenheadGrid} from "~/composables/useMaidenheadGrid";
 
 useHead({
-  title: '梅登黑德网格定位 · HAM c5r',
-  script: [
-    {src: '//api.map.baidu.com/api?type=webgl&v=1.0&ak=G53LAC6duWQm9TExskrP5Fxvn0QZ6oU9'}
-  ]
+  title: '梅登黑德网格定位 · HAM c5r'
 })
 
 const dayjs = useDayjs()
@@ -46,6 +43,36 @@ const update_location = () => {
       locating.value = false
       reject(err.message)
     })
+  })
+}
+
+const map_init = () => {
+  // map init
+  map.value = new BMapGL.Map('map-container', {
+    enableDblclickZoom: false,
+    displayOptions: {
+      building: false
+    }
+  });
+  map.value.centerAndZoom(new BMapGL.Point(116.404, 39.915), 12);
+  map.value.enableScrollWheelZoom(true);
+  map.value.addEventListener('click', function (e: any) {
+    map_draw_bound(useMaidenheadGrid().from_coords(e.latlng.lng, e.latlng.lat) as string)
+  });
+
+  // location
+  update_location().then(loc => {
+    location.value.longitude = loc.coords.longitude
+    location.value.latitude = loc.coords.latitude
+    location.value.grid = useMaidenheadGrid().from_coords(location.value.longitude, location.value.latitude) as string
+
+    map_moveto(location.value.longitude, location.value.latitude)
+
+    // render grid zone
+    map_draw_bound(useMaidenheadGrid().from_coords(location.value.longitude, location.value.latitude) as string)
+    let real_point = new BMapGL.Point(location.value.longitude, location.value.latitude)
+    let marker = new BMapGL.Marker(real_point)
+    map.value.addOverlay(marker)
   })
 }
 
@@ -94,33 +121,7 @@ onMounted(() => {
     now_time.value = dayjs()
   }, 1000)
 
-  // map init
-  map.value = new BMapGL.Map('map-container', {
-    enableDblclickZoom: false,
-    displayOptions: {
-      building: false
-    }
-  });
-  map.value.centerAndZoom(new BMapGL.Point(116.404, 39.915), 12);
-  map.value.enableScrollWheelZoom(true);
-  map.value.addEventListener('click', function (e: any) {
-    map_draw_bound(useMaidenheadGrid().from_coords(e.latlng.lng, e.latlng.lat) as string)
-  });
-
-  // location
-  update_location().then(loc => {
-    location.value.longitude = loc.coords.longitude
-    location.value.latitude = loc.coords.latitude
-    location.value.grid = useMaidenheadGrid().from_coords(location.value.longitude, location.value.latitude) as string
-
-    map_moveto(location.value.longitude, location.value.latitude)
-
-    // render grid zone
-    map_draw_bound(useMaidenheadGrid().from_coords(location.value.longitude, location.value.latitude) as string)
-    let real_point = new BMapGL.Point(location.value.longitude, location.value.latitude)
-    let marker = new BMapGL.Marker(real_point)
-    map.value.addOverlay(marker)
-  })
+  map_init()
 })
 
 onBeforeUnmount(() => {
