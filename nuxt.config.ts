@@ -4,12 +4,14 @@ export default defineNuxtConfig({
     modules: [
         "@nuxtjs/tailwindcss",
         "@pinia/nuxt",
-        "dayjs-nuxt"
+        "dayjs-nuxt",
+        "@vite-pwa/nuxt"
     ],
     dayjs: {
         locales: ['zh', 'en'],
         plugins: ['relativeTime', 'utc', 'timezone'],
         defaultLocale: 'zh',
         defaultTimezone: 'Asia/Shanghai',
-    }
+    },
+    pwa: {}
 })

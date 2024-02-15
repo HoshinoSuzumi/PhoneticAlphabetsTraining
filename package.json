@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
+    "@vite-pwa/nuxt": "^0.5.0",
     "daisyui": "^4.6.2",
     "dayjs-nuxt": "^2.1.9"
   }
