@@ -135,9 +135,18 @@ export const usePersistence = defineStore('persistence', () => {
         'Macau': 'XX$n$c3{A-W}'
     }
 
+    function to_phonetic(str: string): string[] {
+        const persist = usePersistence()
+        const full_phonetic_dict = {
+            ...persist.phonetic_dict,
+            ...persist.number_phonetic_dict
+        }
+        return str.split('').map(w => full_phonetic_dict[w] ? full_phonetic_dict[w][Math.floor(Math.random() * full_phonetic_dict[w].length)]?.word : w)
+
+    }
+
     function random_cq(callsign: string) {
         const cqs = [
-            `${callsign}`,
             `CQ ${callsign}, calling cq and standing by.`,
             `CQ CQ CQ, This is ${callsign}, standing by.`,
             `My call sign is ${callsign}, over.`,
@@ -178,6 +187,7 @@ export const usePersistence = defineStore('persistence', () => {
         phonetic_dict,
         number_phonetic_dict,
         callsign_templates,
+        to_phonetic,
         random_cq,
         random_reply
     }

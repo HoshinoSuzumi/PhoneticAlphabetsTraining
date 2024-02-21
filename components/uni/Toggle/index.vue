@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {PropType} from "@vue/runtime-core";
+import type {PropType} from "vue";
 
 const emit = defineEmits(['input', 'change', 'update:modelValue'])
 
@@ -111,8 +111,8 @@ watch(() => props.modelValue, (value) => {
     }">
       <span v-if="onIcon || offIcon" class="absolute inset-0 flex items-center justify-center text-neutral-400">
         <Transition name="icon" mode="out-in">
-          <Icon v-if="checked && onIcon" :name="onIcon"/>
-          <Icon v-else-if="!checked && offIcon" :name="offIcon"/>
+          <slot v-if="checked" name="on-icon"/>
+          <slot v-else name="off-icon"/>
         </Transition>
       </span>
     </span>

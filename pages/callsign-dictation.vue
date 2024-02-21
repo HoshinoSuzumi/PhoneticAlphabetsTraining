@@ -13,6 +13,7 @@ const message = useMessage()
 const persist = usePersistence()
 const tts = useTTS()
 
+const callsign_only = ref(false)
 const answer_field = ref()
 const input_answer = ref('')
 const answer_state = ref<-1 | 0 | 1>(0)
@@ -52,7 +53,7 @@ const fuck_new_challenge = () => {
 }
 
 const fuck_speech = (slow: boolean = false) => {
-  tts.speech(challenge.value.speech, {
+  tts.speech(callsign_only.value ? persist.to_phonetic(challenge.value.answer).join(',') : challenge.value.speech, {
     interrupt: true,
     rate: slow ? 0.6 : void 0
   })
@@ -124,7 +125,7 @@ onMounted(() => {
             <IconReload class="w-6 h-6"/>
             重播
           </button>
-          <button class="btn" @click="fuck_qrz()">
+          <button class="btn" @click="fuck_qrz()" v-if="!callsign_only">
             <IconMessageQuestion class="w-6 h-6"/>
             QRZ
           </button>
@@ -142,7 +143,21 @@ onMounted(() => {
                class="join-item input input-lg input-bordered text-center w-full uppercase font-bold text-2xl"
                maxlength="8" v-model="input_answer"/>
       </div>
-      <div class="w-full flex flex-row justify-end">
+      <div class="w-full flex flex-col-reverse md:flex-row justify-between gap-2 md:gap-0">
+        <div class="flex items-center gap-2 text-sm text-neutral-400 font-bold">
+          <UniToggle id="callsign_only" size="sm" v-model="callsign_only"/>
+          <div class="tooltip tooltip-bottom" data-tip="仅播放呼号而不套用模板">
+            <label for="callsign_only" class="inline-flex items-center gap-0.5 cursor-help select-none">
+              快速模式
+              <svg class="mt-0.5" xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+                  <path d="M12 16v.01M12 13a2 2 0 0 0 .914-3.782a1.98 1.98 0 0 0-2.414.483"/>
+                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/>
+                </g>
+              </svg>
+            </label>
+          </div>
+        </div>
         <button class="btn btn-primary btn-block md:btn-wide"
                 @click="answer_state === -1 ? fuck_new_challenge() : fuck_submit()"
                 :disabled="!input_answer || answer_state === 1">
