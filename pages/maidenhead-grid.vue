@@ -136,7 +136,7 @@ const fuck_locate_grid = (locator: string) => {
   update_straight_distance()
 }
 
-const fuck_locate_lnglat = (lng: number, lat: number) => {
+const fuck_locate_lnglat = (lng: number, lat: number, moveToCenter: boolean = true) => {
   if (!lng || !lat) {
     message.warning('请输入正确的经纬度')
     return
@@ -146,7 +146,7 @@ const fuck_locate_lnglat = (lng: number, lat: number) => {
   t_location.value.latitude = lat
   t_location.value.grid = locator as string
 
-  fuck_map_view_to(lng, lat)
+  if (moveToCenter) fuck_map_view_to(lng, lat)
   fuck_move_elements(lng, lat, 'target')
   update_straight_distance()
 }
@@ -171,6 +171,11 @@ const handle_map_init = () => {
     t_location.value.map.marker,
     t_location.value.map.rectangle
   ])
+
+  // init events
+  mapInst.value?.on('click', (ev) => {
+    fuck_locate_lnglat(ev.lnglat.lng, ev.lnglat.lat, false)
+  })
 
   // refresh location
   update_location().then(loc => {
