@@ -429,6 +429,7 @@ onBeforeUnmount(() => {
             </div>
           </div>
         </Transition>
+        <p class="text-xs text-neutral-300 text-center font-bold mt-1">也可以直接在地图上点选位置</p>
       </div>
     </div>
   </div>
