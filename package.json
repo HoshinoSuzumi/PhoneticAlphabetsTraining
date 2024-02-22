@@ -1,6 +1,17 @@
 {
-  "name": "nuxt-app",
-  "private": true,
+  "name": "ham-set",
+  "description": "Useful things for HAMs",
+  "keywords": [
+    "ham",
+    "amateur-radio"
+  ],
+  "author": {
+    "name": "HoshinoSuzumi",
+    "email": "master@uniiem.com"
+  },
+  "repository": "https://github.com/HoshinoSuzumi/PhoneticAlphabetsTraining",
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "scripts": {
     "build": "nuxt build",
