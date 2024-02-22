@@ -311,7 +311,10 @@ onBeforeUnmount(() => {
             </svg>
             <span class="text-xl font-bold font-mono leading-none">
               <span class="text-xs text-neutral-500 font-sans uppercase">longitude</span><br/>
-              {{ m_location?.longitude?.toFixed(5) || '-' }}
+              <span v-if="!m_location?.longitude">-</span>
+              <UniCopyable v-else :text="m_location?.longitude">
+                {{ m_location?.longitude?.toFixed(5) }}
+              </UniCopyable>
             </span>
           </div>
           <div class="flex justify-center items-center gap-1.5">
@@ -321,14 +324,20 @@ onBeforeUnmount(() => {
             </svg>
             <span class="text-xl font-bold font-mono leading-none">
               <span class="text-xs text-neutral-500 font-sans uppercase">latitude</span><br/>
-              {{ m_location?.latitude?.toFixed(5) || '-' }}
+              <span v-if="!m_location?.latitude">-</span>
+              <UniCopyable v-else :text="m_location?.latitude">
+                {{ m_location?.latitude?.toFixed(5) }}
+              </UniCopyable>
             </span>
           </div>
           <div class="flex justify-center items-center gap-1.5 col-span-2 border-none mt-2">
             <!--            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>-->
             <span class="text-2xl font-bold font-sans text-center">
               <span class="text-xs text-neutral-500 font-sans uppercase">maidenhead</span><br/>
-              <span class="text-sky-500">{{ m_location.grid || 'Locating...' }}</span>
+              <span v-if="!m_location.grid" class="text-sky-500">Locating...</span>
+              <UniCopyable v-else class="text-sky-500" :text="m_location.grid">
+                {{ m_location.grid }}
+              </UniCopyable>
             </span>
           </div>
         </div>
@@ -382,7 +391,9 @@ onBeforeUnmount(() => {
               </svg>
               <span class="text-xl font-bold font-mono leading-none">
               <span class="text-xs text-neutral-500 font-sans uppercase">longitude</span><br/>
-              {{ t_location?.longitude?.toFixed(5) || '-' }}
+              <UniCopyable :text="t_location?.longitude">
+                {{ t_location?.longitude?.toFixed(5) || '-' }}
+              </UniCopyable>
             </span>
             </div>
             <div class="flex justify-center items-center gap-1.5">
@@ -392,23 +403,28 @@ onBeforeUnmount(() => {
               </svg>
               <span class="text-xl font-bold font-mono leading-none">
               <span class="text-xs text-neutral-500 font-sans uppercase">latitude</span><br/>
-              {{ t_location?.latitude?.toFixed(5) || '-' }}
+              <UniCopyable :text="t_location?.latitude">
+                {{ t_location?.latitude?.toFixed(5) || '-' }}
+              </UniCopyable>
             </span>
             </div>
             <div class="flex justify-center items-center gap-1.5 col-span-2 xl:col-span-1 border-none mt-2">
               <!--            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>-->
               <span class="text-2xl font-bold font-sans text-center">
               <span class="text-xs text-neutral-500 font-sans uppercase">DISTANCE</span><br/>
-              {{
-                  converted_distance || '--'
-                }}
+              <span v-if="!converted_distance">--</span>
+              <UniCopyable v-else :text="converted_distance">
+                {{ converted_distance }}
+              </UniCopyable>
             </span>
             </div>
             <div class="flex justify-center items-center gap-1.5 col-span-2 xl:col-span-1 border-none mt-2">
               <!--            <svg xmlns="http://www.w3.org/2000/svg" class="mt-1" width="26" height="26" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>-->
               <span class="text-2xl font-bold font-sans text-center">
               <span class="text-xs text-neutral-500 font-sans uppercase">maidenhead</span><br/>
-              <span class="text-green-500">{{ t_location.grid || '------' }}</span>
+              <UniCopyable :text="t_location.grid" class="text-green-500">
+                {{ t_location.grid || '------' }}
+              </UniCopyable>
             </span>
             </div>
           </div>
