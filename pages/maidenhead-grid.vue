@@ -65,7 +65,7 @@ const t_location = ref<TargetInfo>({
 const distance = ref()
 const converted_distance = computed(() => {
   if (!distance.value) return
-  return distance.value < 1000 ? distance.value : `${(distance.value / 1000).toFixed(2)}KM`
+  return distance.value < 1000 ? `${distance.value.toFixed(2)}M` : `${(distance.value / 1000).toFixed(2)}KM`
 })
 
 const get_center_of_bound = (bound: number[][]): number[] => [bound[0][0] + (bound[1][0] - bound[0][0]) / 2, bound[0][1] + (bound[1][1] - bound[0][1]) / 2]
@@ -165,6 +165,8 @@ const handle_map_init = () => {
   m_location.value.map.rectangle = new AMap.Rectangle()
   t_location.value.map.marker = new AMap.Marker()
   t_location.value.map.rectangle = new AMap.Rectangle()
+  m_location.value.map.rectangle.on('click', e => fuck_locate_lnglat(e.lnglat.lng, e.lnglat.lat, false))
+  t_location.value.map.rectangle.on('click', e => fuck_locate_lnglat(e.lnglat.lng, e.lnglat.lat, false))
   mapInst.value?.add([
     m_location.value.map.marker,
     m_location.value.map.rectangle,
