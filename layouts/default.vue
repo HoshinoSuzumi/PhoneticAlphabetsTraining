@@ -2,6 +2,7 @@
 import {ref} from 'vue';
 import {useRoute} from 'vue-router';
 import {useTTS} from "~/composables/useTTS";
+import {SpeedInsights} from '@vercel/speed-insights/vue'
 
 const route = useRoute()
 const tts = useTTS()
@@ -34,6 +35,7 @@ watch(current_pitch, value => tts.current_pitch.value = parseFloat(parseFloat(va
 </script>
 
 <template>
+  <SpeedInsights/>
   <div class="drawer min-h-screen">
     <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
     <div class="drawer-content h-full flex flex-col">
