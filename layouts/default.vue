@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {ref} from 'vue';
-import {useRoute} from 'vue-router';
-import {useTTS} from "~/composables/useTTS";
-import {SpeedInsights} from '@vercel/speed-insights/vue'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useTTS } from '~/composables/useTTS'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 
 const route = useRoute()
 const tts = useTTS()
@@ -11,17 +11,17 @@ const nav = ref([
   {
     label: '速查表',
     route: 'index',
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12z"/><path d="M19 16H7a2 2 0 0 0-2 2M9 8h6"/></g></svg>'
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12z"/><path d="M19 16H7a2 2 0 0 0-2 2M9 8h6"/></g></svg>',
   },
   {
     label: '呼号听写',
     route: 'callsign-dictation',
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20h4L18.5 9.5a1.5 1.5 0 0 0-4-4L4 16v4m9.5-13.5l4 4"/></svg>'
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20h4L18.5 9.5a1.5 1.5 0 0 0-4-4L4 16v4m9.5-13.5l4 4"/></svg>',
   },
   {
     label: '梅登黑德定位',
     route: 'maidenhead-grid',
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>'
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0m8-10v2m0 16v2m8-10h2M2 12h2"/></g></svg>',
   },
 ])
 
@@ -65,6 +65,20 @@ watch(current_pitch, value => tts.current_pitch.value = parseFloat(parseFloat(va
         <div class="flex-none hidden lg:block">
           <ul class="menu menu-horizontal space-x-2">
             <!-- navbar menu -->
+            <div class="tooltip tooltip-bottom" data-tip="已升级为全新的 HAM Set 工具箱，包含题库、卫星数据库等新的工具 （模拟呼号听写功能重做中）">
+              <li>
+                <a href="https://ham-dev.c5r.app/" class="bg-primary text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" class="animate-spin">
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                      <path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/>
+                      <path
+                        d="M12 2a3 3 0 0 1 3 3q0 .843-.776 2.64L13.5 9l1.76-1.893q.748-.899 1.27-1.205a2.97 2.97 0 0 1 4.07 1.099a3.01 3.01 0 0 1-1.09 4.098q-.561.326-1.846.535L15 12l2.4.326c1 .145 1.698.337 2.11.576A3.01 3.01 0 0 1 20.6 17a2.97 2.97 0 0 1-4.07 1.098q-.522-.303-1.27-1.205L13.5 15l.724 1.36q.775 1.799.776 2.64a3 3 0 0 1-6 0q0-.843.776-2.64L10.5 15l-1.76 1.893q-.748.9-1.27 1.205A2.97 2.97 0 0 1 3.4 17a3.01 3.01 0 0 1 1.09-4.098q.561-.326 1.846-.536L9 12l-2.4-.325c-1-.145-1.698-.337-2.11-.576A3.01 3.01 0 0 1 3.4 7a2.97 2.97 0 0 1 4.07-1.099q.522.304 1.27 1.205L10.5 9Q9 5.562 9 5a3 3 0 0 1 3-3"/>
+                    </g>
+                  </svg>
+                  尝试新版本
+                </a>
+              </li>
+            </div>
             <li v-for="(link, k) in nav" :key="k">
               <RouterLink :class="{ 'active': link.route === route.name }" :to="{ name: link.route }">
                 <div v-if="link.icon" v-html="link.icon"/>
@@ -132,7 +146,7 @@ watch(current_pitch, value => tts.current_pitch.value = parseFloat(parseFloat(va
     <div class="drawer-side">
       <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
       <ul
-          class="menu pt-16 px-1 w-64 space-y-1 min-h-screen bg-base-100/80 backdrop-blur-lg backdrop-saturate-50 text-base-content">
+        class="menu pt-16 px-1 w-64 space-y-1 min-h-screen bg-base-100/80 backdrop-blur-lg backdrop-saturate-50 text-base-content">
         <!-- sidebar menu -->
         <li v-for="(link, k) in nav" :key="k">
           <RouterLink :class="{ 'active': link.route === route.name }" :to="{ name: link.route }">
